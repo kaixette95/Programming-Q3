@@ -8,7 +8,7 @@
 
 //self-referential structure
 struct listnode {
-	int data; //listnode contains a number
+	char data[200]; //listnode contains a number
 	struct listnode *nextPtr; //pointer to next node
 };
 
@@ -23,23 +23,32 @@ int PosttoPre(ListNodePtr *sPtr, char expression);
 int PosttoIn(ListNodePtr *sPtr, char expression);
 int PretoPost(ListNodePtr *sPtr, char expression);
 int PretoIn(ListNodePtr *sPtr, char expression);
-int determine(char expression);
+int evaluate(char expression[200]);
+int determine(char expression[200]);
 
-int main()
+int main(void)
 {
 	ListNodePtr startPtr = NULL;
 	char data[200]; //user's expression
 	int option;
+	int condition;
 	
 	//prompt user to enter expression
 	printf("Enter an expression: ");
-	scanf("%s", data)
+	scanf("%s", data);
 	
 
 	//determine user's expression whether is it pre, in or postfix
-	determine(data);
+	condition = determine(data);
 	
+	if(condition == 1)
+	{
+		return 0;
+	}
 	//menu
+	printf("==============================================");
+	printf("\n   %s", data);
+	printf("\n==============================================");
 	printf("\nEnter your option: ");
 	printf("\n1. Infix to postfix");
 	printf("\n2. Infix to prefix");
@@ -47,50 +56,147 @@ int main()
 	printf("\n4. Postfix to infix");
 	printf("\n5. Prefix to postfix");
 	printf("\n6. Prefix to infix");
-	printf("\n7. Exit");
+	printf("\n7. Evaluate the expression");
+	printf("\n8. Exit");
+	printf("\n\nYour option: ");
 	
 	scanf("%d", &option);
 	
-	if(option == 1)
+	if(condition == 2)
 	{
-		IntoPost(&startPtr, data);
-	}
-	else if(option == 2)
-	{
-		IntoPre(&startPtr, data);
+		if(option == 1)
+		{
+			//IntoPost(&startPtr, data);
+		}
+		
+		else if(option == 2)
+		{
+			//IntoPre(&startPtr, data);
+		}
+	
+		else if(option == 3)
+		{
+			printf("This option is invalid");
+		}
+	
+		else if(option == 4)
+		{
+			printf("This option is invalid");
+		}
+	
+		else if(option == 5)
+		{
+			printf("This option is invalid");
+		}
+	
+		else if(option == 6)
+		{
+			printf("This option is invalid");
+		}
+	
+		else if(option == 7)
+		{
+			//evaluate(data);
+		}
+	
+		else if(option == 8)
+		{
+			return 0;
+		}
 	}
 	
-	else if(option == 3)
+	if(condition == 3)
 	{
-		PosttoPre(&startPtr, data);
+		if(option == 1)
+		{
+			printf("This option is invalid");
+		}
+		
+		else if(option == 2)
+		{
+			printf("This option is invalid");
+		}
+	
+		else if(option == 3)
+		{
+			printf("This option is invalid");
+		}
+	
+		else if(option == 4)
+		{
+			printf("This option is invalid");
+		}
+	
+		else if(option == 5)
+		{
+			//PretoPost(&startPtr, data);
+		}
+	
+		else if(option == 6)
+		{
+			//PretoIn(&startPtr, data);
+		}
+	
+		else if(option == 7)
+		{
+			//evaluate(data);
+		}
+	
+		else if(option == 8)
+		{
+			return 0;
+		}
 	}
 	
-	else if(option == 4)
+	if(condition == 4)
 	{
-		PosttoIn(&startPtr, data);
-	}
+		if(option == 1)
+		{
+			printf("This option is invalid");
+		}
+		
+		else if(option == 2)
+		{
+			printf("This option is invalid");
+		}
 	
-	else if(option == 5)
-	{
-		PretoPost(&startPtr, data);
-	}
+		else if(option == 3)
+		{
+			//PosttoPre(&startPtr, data);
+		}
 	
-	else if(option == 6)
-	{
-		PretoIn(&startPtr, data);
-	}
+		else if(option == 4)
+		{
+			//PosttoIn(&startPtr, data);
+		}
 	
-	else if(option == 7)
-	{
-		return 0;
+		else if(option == 5)
+		{
+			printf("This option is invalid");
+		}
+	
+		else if(option == 6)
+		{
+			printf("This option is invalid");
+		}
+	
+		else if(option == 7)
+		{
+			//evaluate(data);
+		}
+	
+		else if(option == 8)
+		{
+			return 0;
+		}
 	}
 }
 
-int determine(char expression)
+int determine(char expression[200])
 {
 	int i;
-	int openbracket;
-	int closebracket;
+	int openbracket=0;
+	int closebracket=0;
 	
 	for(i=0; expression[i] != '\0'; i++)
 	{
@@ -110,27 +216,35 @@ int determine(char expression)
 		if(openbracket != closebracket)
 		{
 			printf("Invalid expression\n");
-			return 0;
+			return 1;
 		}
-		
+		else
+		{
 		//determine whether expression is infix
 		if((isdigit(expression[0]) || expression[0] == '(') && (isdigit(expression[strlen(expression)-1]) || expression[strlen(expression)-1] == ')') )
 		{
-			printf("\n%s\n This is an infix expression", expression);
-			return 1;
+			printf("\nThis is an infix expression\n", expression);
+			return 2;
 		}
 		
-		else if((ispunct(expression[0]) && (expression[0] != '(' && expression[0] != ')')) && isdigit(expression[strlen(expression)-1]) ) //if the 1st character is punctuation but not '(' and ')', and the last character is digit (prefix)
+		//if the 1st character is punctuation but not '(' and ')', and the last character is digit (prefix)
+		else if((ispunct(expression[0]) && (expression[0] != '(' && expression[0] != ')')) && isdigit(expression[strlen(expression)-1]) ) 
   		{
-    		printf("\n%s\nThis is an prefix expression\n", expression);
-    		return 2;
+    		printf("\nThis is an prefix expression\n", expression);
+    		return 3;
   		}
   		
-  		else if ( isdigit(expression[0]) && (ispunct(expression[strlen(expression)-1]) && (expression[strlen(expression)-1] != '(' && expression[strlen(expression)-1] != ')')) ) //if the 1st character is digit, last character is punctuation but not '(' and ')' (postfix)
+  		//if the 1st character is digit, last character is punctuation but not '(' and ')' (postfix)
+  		else if ( isdigit(expression[0]) && (ispunct(expression[strlen(expression)-1]) && (expression[strlen(expression)-1] != '(' && expression[strlen(expression)-1] != ')')) ) 
     	{
-     		printf("\n%s\nThis is an postfix.\n", expression);
-       		return 3;
+     		printf("\nThis is an postfix expression\n", expression);
+       		return 4;
        	}
+       	else
+       	{
+       		printf("\nInvalid expression\n");
+       	}
+		}
 }
 
 /*IntoPost(ListNodePtr *sPtr, char expression)
