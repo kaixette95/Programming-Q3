@@ -3,6 +3,9 @@
 #include <ctype.h>
 #include <string.h>
 
+//global variable
+
+
 //self-referential structure
 struct listnode {
 	int data; //listnode contains a number
@@ -20,24 +23,21 @@ int PosttoPre(ListNodePtr *sPtr, char expression);
 int PosttoIn(ListNodePtr *sPtr, char expression);
 int PretoPost(ListNodePtr *sPtr, char expression);
 int PretoIn(ListNodePtr *sPtr, char expression);
-int determine(ListNodePtr *sPtr, char expression);
+int determine(char expression);
 
 int main()
 {
 	ListNodePtr startPtr = NULL;
 	char data[200]; //user's expression
 	int option;
-	int *length;
 	
 	//prompt user to enter expression
 	printf("Enter an expression: ");
 	scanf("%s", data)
 	
-	*length = strlen(data);
-
 
 	//determine user's expression whether is it pre, in or postfix
-	determine(&startPtr, data);
+	determine(data);
 	
 	//menu
 	printf("\nEnter your option: ");
@@ -47,6 +47,7 @@ int main()
 	printf("\n4. Postfix to infix");
 	printf("\n5. Prefix to postfix");
 	printf("\n6. Prefix to infix");
+	printf("\n7. Exit");
 	
 	scanf("%d", &option);
 	
@@ -85,7 +86,7 @@ int main()
 	}
 }
 
-determine(ListNodePtr *sPtr, char expression)
+int determine(char expression)
 {
 	int i;
 	int openbracket;
@@ -105,16 +106,31 @@ determine(ListNodePtr *sPtr, char expression)
 		
 	}
 	
+		//if number of openbracket is different from closing bracket, invalid expression
 		if(openbracket != closebracket)
 		{
 			printf("Invalid expression\n");
 			return 0;
 		}
 		
-		if((isdigit(expression[0]) || expression[0] == '(') && (isdigit(expression[length-1]) || expression[length-1] == ')') )
+		//determine whether expression is infix
+		if((isdigit(expression[0]) || expression[0] == '(') && (isdigit(expression[strlen(expression)-1]) || expression[strlen(expression)-1] == ')') )
 		{
 			printf("\n%s\n This is an infix expression", expression);
+			return 1;
 		}
+		
+		else if((ispunct(expression[0]) && (expression[0] != '(' && expression[0] != ')')) && isdigit(expression[strlen(expression)-1]) ) //if the 1st character is punctuation but not '(' and ')', and the last character is digit (prefix)
+  		{
+    		printf("\n%s\nThis is an prefix expression\n", expression);
+    		return 2;
+  		}
+  		
+  		else if ( isdigit(expression[0]) && (ispunct(expression[strlen(expression)-1]) && (expression[strlen(expression)-1] != '(' && expression[strlen(expression)-1] != ')')) ) //if the 1st character is digit, last character is punctuation but not '(' and ')' (postfix)
+    	{
+     		printf("\n%s\nThis is an postfix.\n", expression);
+       		return 3;
+       	}
 }
 
 /*IntoPost(ListNodePtr *sPtr, char expression)
